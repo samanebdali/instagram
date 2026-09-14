@@ -7,6 +7,7 @@ from telegram import ParseMode, Update
 import logging
 import requests
 import json
+import os
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 
@@ -15,7 +16,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 #Logger Setup
 logger = logging.getLogger(__name__)
 
-TOKEN = "7181270171:AAGfx_94IabEO_ZQBFHORxtrOwgJs8kbVsY"
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 
 def download(update: Update, context: CallbackContext):
     message = update.effective_message
@@ -58,6 +59,8 @@ def download(update: Update, context: CallbackContext):
         context.bot.sendMessage(chat_id=update.message.chat_id, text="Kindly Send Me Public Instagram Video/Photo Url")
 
 def main():
+    if not TOKEN:
+        raise RuntimeError("Set TELEGRAM_BOT_TOKEN before starting the bot")
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     logger.info("Setting Up MessageHandler")
